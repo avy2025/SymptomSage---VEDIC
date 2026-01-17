@@ -22,7 +22,7 @@
       "@shared/*": ["shared/*"]
     }
   },
-  "include": ["client", "server", "shared"],
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "dist", "build"]
 }
 
