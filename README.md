@@ -53,91 +53,59 @@ High-level layout:
 
 ---
 
-## Running the App
+## Running the App Locally
 
-From the project root (`Symptom-Sage/`):
+To run Symptom-Sage (VEDIC) on your local machine, follow these steps:
 
-1. **Install dependencies**
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
 
-```bash
-npm install
-```
+2. **Set up Database Environment**
+   This project uses **PostgreSQL** with **Drizzle ORM**. You need a running PostgreSQL instance. 
+   Create a `.env` file in the root directory and add your connection string:
+   ```env
+   DATABASE_URL=postgresql://user:password@localhost:5432/symptomsage
+   ```
 
-2. **Development (no database required)**
+3. **Initialize the Database Schema**
+   Run the following command to push the schema to your database:
+   ```bash
+   npm run db:push
+   ```
 
-This starts Express and Vite together on the same port (default `5000`):
-
-```bash
-npm run dev
-```
-
-3. **Production build**
-
-```bash
-npm run build
-npm start
-```
-
----
-
-## How VEDIC Works (Backend Logic)
-
-The core triage logic lives in `server/routes.ts`:
-
-- A small **knowledge base** (`DISEASE_DATA`) defines:
-  - Key symptom buckets (fever, cough, headache, stomach pain, chest pain)
-  - Common vs urgent conditions for each bucket
-  - Associated sub‑symptoms and an urgency level (`low` → `critical`)
-- `analyzeSymptoms(symptoms: string)`:
-  - Lowercases and scans the user input for disease keywords and sub‑symptoms.
-  - Assigns scores to candidate conditions and tallies urgency.
-  - Returns:
-    - `matchedDiseases` – a map of condition → score
-    - `urgencyLevel` – `"low" | "medium" | "high" | "critical"`
-- `generateVedicResponse(userInput, chatHistoryLength)`:
-  - If it’s the first interaction, returns a **greeting + disclaimer**.
-  - Otherwise, ranks the top conditions, computes urgency, and returns:
-    - A formatted list of **possible conditions** with confidence %
-    - An **urgency badge** (🚨, ⚠️, etc.)
-    - Suggestive **next steps** and a **strong disclaimer**.
-
-All messages (user + VEDIC) are stored in the DB via `storage.ts` and read back on page load to rebuild the conversation.
+4. **Start Development Server**
+   This starts the Express backend and Vite frontend together on port `5000`:
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:5000](http://localhost:5000) in your browser.
 
 ---
 
-## UX Notes
+## How VEDIC Works
 
-- **Session management**
-  - The client generates a `vedic_session_id` via `nanoid` and persists it in `localStorage`.
-  - All chat history is tied to this `sessionId`.
+The current implementation features a robust triage engine:
 
-- **Error handling**
-  - History/load errors show a toast and an inline error UI with “Retry”/“Clear and start over”.
-  - Message send/clear errors show descriptive toasts.
-
-- **Safety & Disclaimer**
-  - A prominent disclaimer is always shown at the bottom of the main page.
-  - The response text also repeats that this is **not a diagnosis** and to seek professional help.
+- **Rule-Based Analysis**: Matches input against a curated knowledge base of conditions (Fever, Cough, Chest Pain, Stomach Pain, Headaches).
+- **Scoring System**: Assigns confidence scores based on symptom matches and keyword proximity.
+- **Urgency Classification**: Categorizes input from `low` to `critical` using visual status icons (🚨, 🆘).
+- **History Management**: Conversation history is persisted in the database, allowing for contextual follow-ups within a session.
 
 ---
 
-## Customization
+## Technical Features
 
-- **Add / tweak symptom rules**
-  - Edit `DISEASE_DATA` in `server/routes.ts`:
-    - Add new keys (e.g. `"breathlessness"`) with `common`, `urgent`, `symptoms`, and `urgency`.
-  - Adjust scoring logic in `analyzeSymptoms` if you want more/less sensitivity.
-
-- **Change UI theme**
-  - Customize CSS variables and background animation in `client/src/index.css`.
-  - Tailwind classes in `Home.tsx` and `ChatInterface.tsx` control most of the look and feel.
+- **Styling**: Premium Vedic theme with dark glassmorphism and animated HSL gradients.
+- **Frontend**: React 18, TanStack Query, Framer Motion, and wouter.
+- **Backend**: Node.js, Express, Drizzle ORM, and PostgreSQL.
+- **UI Kit**: Custom components for Buttons, Inputs, Cards, and Toast notifications.
 
 ---
 
 ## Disclaimer
 
-Symptom-Sage / VEDIC is an **educational demo**.  
-It does **not** provide medical advice, diagnosis, or treatment.  
-Always consult a licensed healthcare professional for any medical concern or emergency.
+Symptom-Sage (VEDIC) is an **educational health assistant** and does **not** provide medical advice, diagnosis, or treatment. Always consult a licensed healthcare professional for medical concerns.
 
 
