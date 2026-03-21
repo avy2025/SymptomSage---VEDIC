@@ -1,0 +1,6 @@
+﻿client/src/components/ui/button.tsx(4,20): error TS2307: Cannot find module '../lib/utils' or its corresponding type declarations.
+client/src/components/ui/card.tsx(2,20): error TS2307: Cannot find module '../lib/utils' or its corresponding type declarations.
+client/src/components/ui/input.tsx(2,20): error TS2307: Cannot find module '../lib/utils' or its corresponding type declarations.
+client/src/components/ui/scroll-area.tsx(3,20): error TS2307: Cannot find module '../lib/utils' or its corresponding type declarations.
+server/db.ts(2,22): error TS2307: Cannot find module 'postgres' or its corresponding type declarations.
+server/vite.ts(61,13): error TS2304: Cannot find name 'express'.
